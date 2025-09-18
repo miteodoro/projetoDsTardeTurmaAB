@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
-import { useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useRouter } from 'expo-router';
+import React, { useState } from 'react';
 import {
-  View,
+  SafeAreaView,
+  StatusBar,
+  StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
-  StyleSheet,
-  SafeAreaView,
-  StatusBar,
+  View,
 } from 'react-native';
 
 const Cadastro = () => {
@@ -126,7 +126,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     fontSize: 16,
     fontFamily: 'normal',
-    borderWidth: 1,
     borderColor: '#000',
     justifyContent: 'center',
     alignItems: 'center',
