@@ -6,12 +6,14 @@ import {
   StyleSheet,
   Text,
   View,
+  TouchableOpacity,
 } from 'react-native';
+import { useRouter } from 'expo-router';
 
 const { width, height } = Dimensions.get('window');
 const SQUARE_WIDTH = width * 0.8;
 const SQUARE_HEIGHT = height * 0.6;
-
+const roteador = useRouter();
 const profiles = [
   { id: 1, name: 'Perfil 1' },
   { id: 2, name: 'Perfil 2' },
@@ -22,7 +24,9 @@ const profiles = [
 export default function TinderSwipeSquare() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const position = useRef(new Animated.ValueXY()).current;
-
+function uploadMusic() {
+    roteador.push('/uploadMusic');
+  }
   const panResponder = useRef(
     PanResponder.create({
       onStartShouldSetPanResponder: () => true,
@@ -91,6 +95,9 @@ export default function TinderSwipeSquare() {
       {currentIndex >= profiles.length && (
         <Text style={styles.finished}>Não há mais perfis</Text>
       )}
+      <TouchableOpacity style={styles.button} onPress={uploadMusic}>
+              <Text style={styles.buttonText}>Enviar sua música</Text>
+            </TouchableOpacity>
     </View>
   );
 }
