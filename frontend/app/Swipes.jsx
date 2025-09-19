@@ -27,6 +27,9 @@ export default function TinderSwipeSquare() {
 function uploadMusic() {
     roteador.push('/uploadMusic');
   }
+  function perfil() {
+    roteador.push('/perfil');
+  }
   const panResponder = useRef(
     PanResponder.create({
       onStartShouldSetPanResponder: () => true,
@@ -97,6 +100,9 @@ function uploadMusic() {
       )}
       <TouchableOpacity style={styles.button} onPress={uploadMusic}>
               <Text style={styles.buttonText}>🎵Enviar sua música</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.button} onPress={perfil}>
+              <Text style={styles.buttonText}>👤Ir para o seu perfil</Text>
             </TouchableOpacity>
     </View>
   );
