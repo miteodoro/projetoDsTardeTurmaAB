@@ -96,7 +96,7 @@ function uploadMusic() {
         <Text style={styles.finished}>Não há mais perfis</Text>
       )}
       <TouchableOpacity style={styles.button} onPress={uploadMusic}>
-              <Text style={styles.buttonText}>Enviar sua música</Text>
+              <Text style={styles.buttonText}>🎵Enviar sua música</Text>
             </TouchableOpacity>
     </View>
   );
@@ -131,6 +131,17 @@ const styles = StyleSheet.create({
   instruction: {
     fontSize: 16,
     color: '#888',
+  },button: {
+    backgroundColor: '#000',
+    paddingVertical: 14,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginTop: 10,
+    marginBottom: 20,
+  },buttonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontFamily: 'negrito',
   },
   finished: {
     fontSize: 22,
