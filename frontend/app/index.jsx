@@ -9,7 +9,7 @@ export default function Index() {
     roteador.push('/cadastrar');
   }
   function entrar() {
-    roteador.push('/uploadMusic');
+    roteador.push('/Swipes');
   }
 
   const roteador = useRouter();
