@@ -32,10 +32,10 @@ const Cadastro = () => {
 
   return (
     <LinearGradient
-      colors={['#fedea6','#fc7ea7', '#7466e6']}
-      start={{ x: 0, y: 0 }} 
-      end={{ x: 1, y: 1 }} 
+      colors={['#8000d5','#f910a3', '#fddf00']}
+      
       style={styles.container}
+      
     >
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#fff" />
