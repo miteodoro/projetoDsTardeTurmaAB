@@ -21,12 +21,8 @@ export default function Upload() {
   }
 
   return (
-    <LinearGradient
-      colors={["#fedea6", "#fc7ea7", "#7466e6"]}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 1 }}
-      style={styles.container}
-    >
+    <LinearGradient colors={["#8000D5", "#F910A3", "#FFBB00"]} style={{ flex: 1 }}>
+    
       <ScrollView style={styles.scrollContainer} showsVerticalScrollIndicator={false}>
         <View style={styles.header}>
           <TouchableOpacity onPress={voltarHome} style={styles.backButton}>

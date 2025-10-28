@@ -3,7 +3,7 @@ import { LinearGradient } from "expo-linear-gradient"
 
 export default function Index() {
   return (
-    <LinearGradient colors={["#8B5CF6", "#EAB308"]} style={{ flex: 1 }}>
+    <LinearGradient colors={["#8000D5", "#F910A3", "#FFBB00"]} style={{ flex: 1 }}>
       <ScrollView style={{ flex: 1 }}>
         {/* Header com botão voltar */}
         <View style={{ paddingTop: 50, paddingHorizontal: 20, paddingBottom: 20 }}>
