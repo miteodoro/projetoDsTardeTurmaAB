@@ -1,10 +1,13 @@
-import { Text, TouchableOpacity, TextInput, View, StyleSheet, Button, useWindowDimensions } from "react-native";
+import React, { useMemo } from "react";
+import { Text, TouchableOpacity, TextInput, View, StyleSheet, Image, useWindowDimensions } from "react-native";
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
-import { useMemo } from "react";
-
+import { RFValue as rf } from "react-native-responsive-fontsize";
 
 export default function Index() {
+  const roteador = useRouter();
+  const { width } = useWindowDimensions();
+
   function cadastro() {
     roteador.push('/cadastrar');
   }
@@ -12,85 +15,66 @@ export default function Index() {
     roteador.push('/Swipes');
   }
 
-  const roteador = useRouter();
-  const { width, height } = useWindowDimensions();
   const dynamicStyles = useMemo(
-      () => ({
-        logoContainer: { marginTop: rf(-40), marginBottom: rf(20) },
-        logo: { width: 200, height: 200 },
-        formPadding: { paddingHorizontal: rf(25) },
-        input: {
-          width: '100%',
-          height: rf(48),
-          fontSize: rf(17),
-          paddingHorizontal: rf(15),
-          marginVertical: rf(8),
-        },
-        botao: { width: '100%', paddingVertical: rf(12), borderRadius: rf(40), marginTop: rf(20) },
-        textoBotao: { fontSize: rf(19) },
-        titulo: { fontSize: rf(26), marginBottom: rf(20) },
-      }),
-      [width, rf]
-    );
-  
+    () => ({
+      logo: { width: 180, height: 180, resizeMode: 'contain' },
+    }),
+    [width]
+  );
 
   return (
     <LinearGradient
-          colors={['#fedea6','#fc7ea7', '#7466e6']}
-          start={{ x: 0, y: 0 }} 
-          end={{ x: 1, y: 1 }} 
-          style={styles.container}
-        >
-          <View style={[styles.logoContainer, dynamicStyles.logoContainer]}>
-                            <Image
-                              style={[styles.Logo, dynamicStyles.logo]}
-                              source={require('../assets/Logo.png')}
-                              accessibilityLabel="Logo do aplicativo"
-                            />
-                          </View>
-    <View style={styles.container}>
-        
-
-      <Text style={styles.title}>Descubra Musica Local</Text>
-      <Text style={styles.subtitle}>Conecte-se com artistas sa sua região</Text>
-
-
-      <View style={styles.form}>
-
-        <View style={styles.inputBlock}>
-          <Text style={styles.label}>E-mail</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="email@exemplo.com"
-            placeholderTextColor="#aaa"
-            keyboardType="email-address"
-          />
-        </View>
-
-
-        <View style={styles.inputBlock}>
-          <Text style={styles.label}>Senha</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="••••••••"
-            secureTextEntry={true}
-            placeholderTextColor="#aaa"
-          />
-        </View>
+      colors={['#fedea6','#fc7ea7', '#7466e6']}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
+      style={styles.container}
+    >
+      {/* Bloco superior com a logo e os textos */}
+      <View style={styles.header}>
+        <Image
+          style={[styles.logo, dynamicStyles.logo]}
+          source={require('../assets/Logo.png')}
+          accessibilityLabel="Logo do aplicativo"
+        />
+        <Text style={styles.title}>Descubra Música Local</Text>
+        <Text style={styles.subtitle}>Conecte-se com artistas da sua região</Text>
       </View>
 
-      <TouchableOpacity style={styles.button} onPress={entrar}>
-        <Text style={styles.buttonText}>Entrar</Text>
-      </TouchableOpacity>
+      {/* Formulário e botões */}
+      <View style={styles.formContainer}>
+        <View style={styles.form}>
+          <View style={styles.inputBlock}>
+            <Text style={styles.label}>E-mail</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="email@exemplo.com"
+              placeholderTextColor="#aaa"
+              keyboardType="email-address"
+            />
+          </View>
 
+          <View style={styles.inputBlock}>
+            <Text style={styles.label}>Senha</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="••••••••"
+              secureTextEntry={true}
+              placeholderTextColor="#aaa"
+            />
+          </View>
+        </View>
 
-      <TouchableOpacity onPress={cadastro}>
-        <Text style={styles.footer}>
-          Não tem uma conta?{' '}
-          <Text style={styles.footerLink}>Cadastre-se</Text>
-        </Text>
-      </TouchableOpacity>
-    </View>
+        <TouchableOpacity style={styles.button} onPress={entrar}>
+          <Text style={styles.buttonText}>Entrar</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={cadastro}>
+          <Text style={styles.footer}>
+            Não tem uma conta?{' '}
+            <Text style={styles.footerLink}>Cadastre-se</Text>
+          </Text>
+        </TouchableOpacity>
+      </View>
     </LinearGradient>
   );
 }
@@ -98,34 +82,39 @@ export default function Index() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: 'space-between',
     paddingHorizontal: 24,
-    justifyContent: 'center',
-
+    paddingVertical: 40,
+  },
+  header: {
+    alignItems: 'center',
+    marginTop: 50,
+  },
+  logo: {
+    marginBottom: 20,
+  },
+  formContainer: {
+    width: '100%',
+  },
+  form: {
+    marginBottom: 20,
   },
   inputBlock: {
     marginBottom: 20,
   },
   label: {
     fontSize: 14,
-    fontFamily: 'normal',
     color: '#333',
     marginBottom: 6,
-  },
-  form: {
-    marginTop: 150,
   },
   input: {
     height: 50,
     backgroundColor: '#fff',
     borderRadius: 20,
     borderWidth: 2,
+    borderColor: '#000',
     paddingHorizontal: 14,
     fontSize: 16,
-    fontFamily: 'normal',
-    borderColor: '#000',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 10,
     shadowColor: "#000",
     shadowOpacity: 0.1,
     shadowOffset: { width: 0, height: 2 },
@@ -143,30 +132,27 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#fff',
     fontSize: 16,
-    fontFamily: 'negrito',
   },
   title: {
     fontSize: 26,
-    fontFamily: 'negrito',
+    fontWeight: 'bold',
     color: '#000',
     textAlign: 'center',
   },
-  subtitle:{
-    fontSize:15,
-    fontFamily: 'normal',
-    color: '#666',
+  subtitle: {
+    fontSize: 15,
+    color: '#444',
     textAlign: 'center',
-    marginTop: 8,
+    marginTop: 6,
   },
   footer: {
     fontSize: 14,
     textAlign: 'center',
     color: '#666',
-    fontFamily: 'normal',
   },
   footerLink: {
-    color: '#333',
-    fontFamily: 'negrito',
+    color: '#000',
+    fontWeight: 'bold',
     textDecorationLine: 'underline',
   },
 });
