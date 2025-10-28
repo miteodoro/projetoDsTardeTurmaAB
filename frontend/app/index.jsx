@@ -1,7 +1,7 @@
-import { Text, TouchableOpacity, TextInput, View, StyleSheet, Button } from "react-native";
+import { Text, TouchableOpacity, TextInput, View, StyleSheet, Button, useWindowDimensions } from "react-native";
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
-
+import { useMemo } from "react";
 
 
 export default function Index() {
@@ -13,6 +13,26 @@ export default function Index() {
   }
 
   const roteador = useRouter();
+  const { width, height } = useWindowDimensions();
+  const dynamicStyles = useMemo(
+      () => ({
+        logoContainer: { marginTop: rf(-40), marginBottom: rf(20) },
+        logo: { width: 200, height: 200 },
+        formPadding: { paddingHorizontal: rf(25) },
+        input: {
+          width: '100%',
+          height: rf(48),
+          fontSize: rf(17),
+          paddingHorizontal: rf(15),
+          marginVertical: rf(8),
+        },
+        botao: { width: '100%', paddingVertical: rf(12), borderRadius: rf(40), marginTop: rf(20) },
+        textoBotao: { fontSize: rf(19) },
+        titulo: { fontSize: rf(26), marginBottom: rf(20) },
+      }),
+      [width, rf]
+    );
+  
 
   return (
     <LinearGradient
@@ -21,8 +41,15 @@ export default function Index() {
           end={{ x: 1, y: 1 }} 
           style={styles.container}
         >
+          <View style={[styles.logoContainer, dynamicStyles.logoContainer]}>
+                            <Image
+                              style={[styles.Logo, dynamicStyles.logo]}
+                              source={require('../assets/Logo.png')}
+                              accessibilityLabel="Logo do aplicativo"
+                            />
+                          </View>
     <View style={styles.container}>
-
+        
 
       <Text style={styles.title}>Descubra Musica Local</Text>
       <Text style={styles.subtitle}>Conecte-se com artistas sa sua região</Text>

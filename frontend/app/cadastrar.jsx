@@ -1,171 +1,238 @@
+import { AntDesign } from "@expo/vector-icons";
 import { LinearGradient } from 'expo-linear-gradient';
-import { useRouter } from 'expo-router';
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
+  Alert,
+  Animated,
+  Image,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
   SafeAreaView,
-  StatusBar,
+  ScrollView,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
+  useWindowDimensions
 } from 'react-native';
 
 const Cadastro = () => {
+  const { width, height } = useWindowDimensions();
+
+  const clamp = useCallback((val, min, max) => Math.max(min, Math.min(max, val)), []);
+  const rf = useCallback((size) => Math.round(clamp(size * (width / 390), 12, 30)), [width, clamp]);
+
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
-  const [whatsapp, setWhatsapp] = useState('');
+  const [isPressing, setIsPressing] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState({});
 
-  
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const debounceRef = useRef(null);
 
-  const handleCadastro = () => {
-    console.log('Nome:', nome);
-    console.log('Email:', email);
-    console.log('Senha:', senha);
-    console.log('WhatsApp:', whatsapp);
-  };
+  useEffect(() => {
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 600,
+      useNativeDriver: true,
+    }).start();
+  }, []);
 
-const formatPhone = (value) => {
-    if (!value) return "";
-    const cleaned = value.replace(/[^0-9]/g, "").slice(0, 11);  
-if (cleaned.length <= 2) {
-      return `(${cleaned}`;
-    } else if (cleaned.length <= 7) {
-      return `(${cleaned.slice(0, 2)}) ${cleaned.slice(2)}`;
-    } else {
-      return `(${cleaned.slice(0, 2)}) ${cleaned.slice(2, 7)}-${cleaned.slice(7)}`;
-    }
-  };  const handleChange = (text) => {
-    // Sempre salva apenas os números
-    const numericValue = text.replace(/[^0-9]/g, "").slice(0, 11);
-    setWhatsapp(numericValue);
-  };
-  function Inicio() {
-    roteador.push('/');
-  }
+  const validateFields = useCallback(() => {
+    const newErrors = {};
+    if (!nome.trim()) newErrors.nome = 'Informe um nome válido.';
+    if (!email.includes('@')) newErrors.email = 'Email inválido.';
+    if (senha.length < 6) newErrors.senha = 'A senha deve ter pelo menos 6 caracteres.';
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  }, [nome, email, senha]);
 
-  const roteador = useRouter();
+  const handleCadastro = useCallback(() => {
+    if (loading) return;
+
+    if (!validateFields()) return;
+
+    setLoading(true);
+    clearTimeout(debounceRef.current);
+
+    debounceRef.current = setTimeout(() => {
+      Alert.alert('Cadastro', 'Usuário cadastrado com sucesso!');
+      console.log('Nome:', nome);
+      console.log('Email:', email);
+      console.log('Senha:', senha);
+      setLoading(false);
+    }, 800);
+  }, [nome, email, senha, loading, validateFields]);
+
+  const dynamicStyles = useMemo(
+    () => ({
+      logoContainer: { marginTop: rf(-40), marginBottom: rf(20) },
+      logo: { width: 200, height: 200 },
+      formPadding: { paddingHorizontal: rf(25) },
+      input: {
+        width: '100%',
+        height: rf(48),
+        fontSize: rf(17),
+        paddingHorizontal: rf(15),
+        marginVertical: rf(8),
+      },
+      botao: { width: '100%', paddingVertical: rf(12), borderRadius: rf(40), marginTop: rf(20) },
+      textoBotao: { fontSize: rf(19) },
+      titulo: { fontSize: rf(26), marginBottom: rf(20) },
+    }),
+    [width, rf]
+  );
 
   return (
-    <LinearGradient
-      colors={['#8000d5','#f910a3', '#fddf00']}
-      
-      style={styles.container}
-      
-    >
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#fff" />
-      <View style={styles.formContainer}>
-        <Text style={styles.titulo}>Cadastro</Text>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+      <LinearGradient colors={['#8000d5', '#f910a3', '#fddf00']} style={styles.gradient}>
+        <SafeAreaView style={styles.safe}>
+          <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            style={styles.flex}
+          >
+            <ScrollView
+              contentContainerStyle={{
+                flexGrow: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+              keyboardShouldPersistTaps="handled"
+            >
+              <TouchableOpacity style={styles.backCircle} onPress={() => navigation.goBack()}>
+                        <AntDesign name="arrowleft" size={20} color="#fff" />
+                      </TouchableOpacity>
+              <Animated.View style={{ opacity: fadeAnim, alignItems: 'center', width: '100%' }}>
+                
+                <View style={[styles.logoContainer, dynamicStyles.logoContainer]}>
+                  <Image
+                    style={[styles.Logo, dynamicStyles.logo]}
+                    source={require('../assets/Logo.png')}
+                    accessibilityLabel="Logo do aplicativo"
+                  />
+                </View>
 
-        <Text style={styles.label}>Nome</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Digite seu nome"
-          placeholderTextColor="#aaa"
-          value={nome}
-          onChangeText={setNome}
-        />
+                
+                <View style={[styles.formContainer, dynamicStyles.formPadding]}>
+                  <Text style={[styles.titulo, dynamicStyles.titulo]}>Cadastro</Text>
 
-        <Text style={styles.label}>Email</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Digite seu email"
-          placeholderTextColor="#aaa"
-          value={email}
-          onChangeText={setEmail}
-          keyboardType="email-address"
-        />
+                 
+                  {[
+                    {
+                      placeholder: 'Nome de usuário',
+                      value: nome,
+                      setter: setNome,
+                      error: errors.nome,
+                      key: 'nome',
+                    },
+                    {
+                      placeholder: 'Email',
+                      value: email,
+                      setter: setEmail,
+                      error: errors.email,
+                      key: 'email',
+                      props: { keyboardType: 'email-address', autoCapitalize: 'none' },
+                    },
+                    {
+                      placeholder: 'Senha',
+                      value: senha,
+                      setter: setSenha,
+                      error: errors.senha,
+                      key: 'senha',
+                      props: { secureTextEntry: true },
+                    },
+                  ].map(({ placeholder, value, setter, error, key, props = {} }) => (
+                    <React.Fragment key={key}>
+                      <TextInput
+                        style={[
+                          styles.input,
+                          dynamicStyles.input,
+                          error && { borderColor: '#ff8080' },
+                        ]}
+                        placeholder={placeholder}
+                        placeholderTextColor="#FFF"
+                        value={value}
+                        onChangeText={(t) => {
+                          setter(t);
+                          if (error) setErrors((e) => ({ ...e, [key]: null }));
+                        }}
+                        {...props}
+                      />
+                      {error && <Text style={styles.error}>{error}</Text>}
+                    </React.Fragment>
+                  ))}
 
-        <Text style={styles.label}>Senha</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Digite sua senha"
-          placeholderTextColor="#aaa"
-          value={senha}
-          onChangeText={setSenha}
-          secureTextEntry
-        />
-
-        <Text style={styles.label}>WhatsApp</Text>
-        <TextInput
-        style={styles.input}
-        placeholder="Digite seu número"
-        placeholderTextColor="#aaa"
-        value={formatPhone(whatsapp)} // Mostra formatado
-        onChangeText={handleChange}   // Guarda só números
-        keyboardType="phone-pad"
-      />
-      <Text style={styles.debug}>📦 Salvo no estado: {whatsapp}</Text>
-
-        <TouchableOpacity style={styles.botao} onPress={handleCadastro}>
-          <Text style={styles.textoBotao}>Cadastrar</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.botao} onPress={Inicio}>
-          <Text style={styles.textoBotao}>Voltar</Text>
-        </TouchableOpacity>
-
-      </View>
-    </SafeAreaView>
-    </LinearGradient>
+                 
+                  <TouchableOpacity
+                    activeOpacity={0.85}
+                    style={[
+                      styles.botao,
+                      dynamicStyles.botao,
+                      isPressing && { transform: [{ scale: 0.97 }], backgroundColor: '#26144d' },
+                      loading && { opacity: 0.7 },
+                    ]}
+                    disabled={loading}
+                    onPressIn={() => setIsPressing(true)}
+                    onPressOut={() => setIsPressing(false)}
+                    onPress={handleCadastro}
+                  >
+                    <Text style={[styles.textoBotao, dynamicStyles.textoBotao]}>
+                      {loading ? 'Enviando...' : 'Cadastrar'}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </Animated.View>
+            </ScrollView>
+          </KeyboardAvoidingView>
+        </SafeAreaView>
+      </LinearGradient>
+    </TouchableWithoutFeedback>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  formContainer: {
-    width: '100%',
-    maxWidth: 400,
-    paddingHorizontal: 20,
-  },
-  titulo: {
-    fontSize: 26,
-    fontFamily: 'negrito',
-    color: '#000',
-    textAlign: 'center',
-  },
-  label: {
-    fontSize: 14,
-    fontFamily: 'normal',
-    color: '#333',
-    marginBottom: 6,
-  },
+  gradient: { flex: 1 },
+  safe: { flex: 1 },
+  flex: { flex: 1 },
+  logoContainer: { alignSelf: 'center' },
+  Logo: { resizeMode: 'contain' },
+  formContainer: { width: '90%', maxWidth: 450 },
+  titulo: { fontFamily: 'negrito', color: '#fff', textAlign: 'center' },
   input: {
-    height: 50,
-    backgroundColor: '#fff',
-    borderRadius: 20,
-    borderWidth: 2,
-    paddingHorizontal: 14,
-    fontSize: 16,
+    width: 300,
+    height: 55,
+    borderRadius: 25,
+    borderWidth: 3,
+    borderColor: '#FFF',
+    textAlign: 'center',
     fontFamily: 'normal',
-    borderColor: '#000',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 10,
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOpacity: 0.1,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 4,
-    elevation: 3,
+    elevation: 5,
+    backgroundColor: '#1D143642',
+    marginTop: 15,
+    color: '#fff',
+    fontSize: 20,
   },
   botao: {
-    backgroundColor: '#000',
-    paddingVertical: 14,
-    borderRadius: 8,
+    backgroundColor: '#1d1436',
+    //borderWidth: 1,
+    borderColor: '#8000D5',
     alignItems: 'center',
-    marginTop: 10,
-    marginBottom: 20,
   },
-  textoBotao: {
-    color: '#fff',
-    fontSize: 16,
-    fontFamily: 'negrito',
+  textoBotao: { color: '#FFF', fontFamily: 'negrito' },
+  error: {
+    color: '#ff8080',
+    textAlign: 'center',
+    marginTop: 4,
+    fontFamily: 'normal',
   },
 });
 
