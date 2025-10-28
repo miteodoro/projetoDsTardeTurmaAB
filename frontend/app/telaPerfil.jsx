@@ -1,5 +1,6 @@
 import { Text, View, ScrollView, TouchableOpacity } from "react-native"
 import { LinearGradient } from "expo-linear-gradient"
+import * as ImagePicker from "expo-image-picker";
 
 export default function Index() {
   return (
