@@ -15,7 +15,7 @@ export default function ArtistaScreen() {
           </TouchableOpacity>
           
           <Image
-            source={{ uri: "https://upload.wikimedia.org/wikipedia/commons/5/54/Green_Day_2020.jpg" }}
+            source={require('../assets/images/green-day.jpg')}
             style={styles.image}
           />
           <Text style={styles.artistName}>GREEN DAY</Text>

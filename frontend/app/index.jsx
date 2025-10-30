@@ -2,7 +2,7 @@ import React, { useMemo } from "react";
 import { Text, TouchableOpacity, TextInput, View, StyleSheet, Image, useWindowDimensions } from "react-native";
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
-import { RFValue as rf } from "react-native-responsive-fontsize";
+
 
 export default function Index() {
   const roteador = useRouter();
