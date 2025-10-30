@@ -28,6 +28,9 @@ export default function Index() {
       setImage(result.assets[0].uri)
     }
   }
+  function voltarHome() {
+    roteador.push("/Swipes");
+  }
 
   return (
     <LinearGradient colors={["#8000D5", "#F910A3", "#FFBB00"]} style={{ flex: 1 }}>
@@ -43,6 +46,7 @@ export default function Index() {
               justifyContent: "center",
               alignItems: "center",
             }}
+            onPress={voltarHome}
           >
             <Text style={{ color: "white", fontSize: 18 }}>←</Text>
           </TouchableOpacity>
